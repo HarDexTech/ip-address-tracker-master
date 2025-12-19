@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IP Address Tracker</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header Section -->
+      <header class="header">
+        <h1 class="title">IP Address Tracker</h1>
+
+        <!-- Search Form -->
+        <form class="search-form" id="searchForm">
+          <input
+            type="text"
+            class="search-input"
+            id="searchInput"
+            placeholder="Search for any IP address or domain"
+            aria-label="Search for IP address or domain"
+          />
+          <button type="button" class="search-button" aria-label="Search">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="11"
+              height="14"
+              viewBox="0 0 11 14"
+            >
+              <path
+                fill="none"
+                stroke="#FFF"
+                stroke-width="3"
+                d="M2 1l6 6-6 6"
+              />
+            </svg>
+          </button>
+        </form>
+      </header>
+
+      <!-- Results Card -->
+      <div class="results-card">
+        <div class="result-item">
+          <div class="result-label">IP Address</div>
+          <div class="result-value" id="ipAddress">-----</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="result-item">
+          <div class="result-label">Location</div>
+          <div class="result-value" id="location">-----</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="result-item">
+          <div class="result-label">Timezone</div>
+          <div class="result-value" id="timezone">-----</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="result-item">
+          <div class="result-label" id="isp-label">ISP</div>
+          <div class="result-value" id="isp">-----</div>
+        </div>
+      </div>
+
+      <!-- Map Container -->
+      <div class="map-container" id="map">
+        <!-- Your JavaScript map integration will go here -->
+      </div>
+    </div>
+
+    <div class="notification hidden"></div>
+
+    <div class="attribution">
+      Challenge by
+      <a href="https://www.frontendmentor.io?ref=challenge" target="_blank"
+        >Frontend Mentor</a
+      >. Coded by <a href="#">Your Name Here</a>.
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
