@@ -3,75 +3,76 @@ name: Deploy IP Address Tracker
 on:
   push:
     branches: [master]
-  pull_request:
-    branches: [master]
-
-permissions:
-  contents: write
-  pages: write
-  id-token: write
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Get all history for debugging
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
-
-      - name: Inject API Key into script.js
+      - name: Debug - Show script.js before
         run: |
-          echo "=== Current directory ==="
-          pwd
-          echo "=== Listing files ==="
-          ls -la
+          echo "=== script.js BEFORE injection ==="
+          head -3 script.js
+          echo "=== Searching for placeholder ==="
+          grep -n "{{IPIFY_API_KEY}}" script.js || echo "Placeholder not found!"
 
-          echo "=== Checking script.js ==="
-          if [ -f "script.js" ]; then
-            echo "✓ Found script.js in root directory"
-            
-            # Check if placeholder exists
-            if grep -q "'{{IPIFY_API_KEY}}'" script.js; then
-              echo "✓ Placeholder found, injecting API key..."
-              sed -i "s/'{{IPIFY_API_KEY}}'/'${{ secrets.IPIFY_API_KEY }}'/" script.js
-              echo "✅ API key injected successfully!"
-            else
-              echo "⚠️ Warning: Placeholder '{{IPIFY_API_KEY}}' not found in script.js"
-              echo "First 5 lines of script.js:"
-              head -5 script.js
-            fi
-          else
-            echo "❌ ERROR: script.js not found in root directory!"
-            echo "Looking for JavaScript files..."
-            find . -name "*.js" -type f | head -10
+      - name: Inject API Key (FIXED VERSION)
+        run: |
+          # FIRST: Check file exists and has placeholder
+          if [ ! -f "script.js" ]; then
+            echo "❌ ERROR: script.js not found!"
             exit 1
           fi
 
-      - name: Build with Jekyll (for GitHub Pages compatibility)
-        run: |
-          # Create a basic Jekyll config to bypass Jekyll processing
-          echo "Created .nojekyll to disable Jekyll processing"
-          touch .nojekyll
-
-          # Create a basic index.html if it doesn't exist (but yours does)
-          if [ ! -f "index.html" ]; then
-            echo "<h1>IP Address Tracker</h1><p>Built with GitHub Actions</p>" > index.html
+          if ! grep -q "{{IPIFY_API_KEY}}" script.js; then
+            echo "❌ ERROR: Placeholder {{IPIFY_API_KEY}} not found in script.js!"
+            echo "First 5 lines of script.js:"
+            head -5 script.js
+            exit 1
           fi
 
-          echo "=== Final file list ==="
-          ls -la
+          # Backup original
+          cp script.js script.js.original
 
-      - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v4 # CHANGED: Updated from v2 to v4
+          # INJECT THE KEY - Use double quotes for sed
+          sed -i "s|{{IPIFY_API_KEY}}|${{ secrets.IPIFY_API_KEY }}|g" script.js
+
+          echo "✅ API Key injected successfully"
+
+      - name: Debug - Show script.js after
+        run: |
+          echo "=== script.js AFTER injection ==="
+          head -3 script.js
+          echo "=== Verifying injection ==="
+
+          # Check if placeholder is gone
+          if grep -q "{{IPIFY_API_KEY}}" script.js; then
+            echo "❌ FAILED: Placeholder still present!"
+            exit 1
+          fi
+
+          # Check if real key was inserted (show masked)
+          if grep -q "at_" script.js; then
+            echo "✅ SUCCESS: Real API key detected (masked):"
+            grep "at_" script.js | sed 's/at_.*/at_**********/'
+          else
+            echo "❌ FAILED: No API key found after injection"
+            exit 1
+          fi
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: .
 
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4 # CHANGED: Updated from v2 to v4
+        uses: actions/deploy-pages@v4
