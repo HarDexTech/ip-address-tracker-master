@@ -1,4 +1,4 @@
-name: Deploy IP Address Tracker
+name: Deploy IP Tracker
 
 on:
   push:
@@ -7,72 +7,55 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pages: write
-      id-token: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Get all history for debugging
 
-      - name: Debug - Show script.js before
+      - name: Debug - Show current script.js
         run: |
-          echo "=== script.js BEFORE injection ==="
+          echo "=== Current script.js (first 3 lines) ==="
           head -3 script.js
-          echo "=== Searching for placeholder ==="
-          grep -n "{{IPIFY_API_KEY}}" script.js || echo "Placeholder not found!"
-
-      - name: Inject API Key (FIXED VERSION)
-        run: |
-          # FIRST: Check file exists and has placeholder
-          if [ ! -f "script.js" ]; then
-            echo "❌ ERROR: script.js not found!"
-            exit 1
-          fi
-
-          if ! grep -q "{{IPIFY_API_KEY}}" script.js; then
-            echo "❌ ERROR: Placeholder {{IPIFY_API_KEY}} not found in script.js!"
-            echo "First 5 lines of script.js:"
-            head -5 script.js
-            exit 1
-          fi
-
-          # Backup original
-          cp script.js script.js.original
-
-          # INJECT THE KEY - Use double quotes for sed
-          sed -i "s|{{IPIFY_API_KEY}}|${{ secrets.IPIFY_API_KEY }}|g" script.js
-
-          echo "✅ API Key injected successfully"
-
-      - name: Debug - Show script.js after
-        run: |
-          echo "=== script.js AFTER injection ==="
-          head -3 script.js
-          echo "=== Verifying injection ==="
-
-          # Check if placeholder is gone
+          echo "=== Looking for placeholder ==="
           if grep -q "{{IPIFY_API_KEY}}" script.js; then
-            echo "❌ FAILED: Placeholder still present!"
-            exit 1
-          fi
-
-          # Check if real key was inserted (show masked)
-          if grep -q "at_" script.js; then
-            echo "✅ SUCCESS: Real API key detected (masked):"
-            grep "at_" script.js | sed 's/at_.*/at_**********/'
+            echo "✅ Placeholder found!"
           else
-            echo "❌ FAILED: No API key found after injection"
+            echo "❌ Placeholder NOT found!"
             exit 1
           fi
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: .
+      - name: Inject API Key (FIXED)
+        run: |
+          echo "=== Injecting API key ==="
+
+          # METHOD 1: Simple string replacement (most reliable)
+          # Read the entire file
+          CONTENT=$(cat script.js)
+          # Replace placeholder with secret
+          CONTENT="${CONTENT//'{{IPIFY_API_KEY}}'/${{ secrets.IPIFY_API_KEY }}}"
+          # Write back
+          echo "$CONTENT" > script.js
+
+          echo "✅ Key injected"
+          echo "First line after injection:"
+          head -1 script.js | sed 's/at_.*/at_**********/'
+
+      - name: Verify Injection
+        run: |
+          echo "=== Verifying ==="
+          if grep -q "${{ secrets.IPIFY_API_KEY }}" script.js; then
+            echo "✅ SUCCESS: Real API key is in script.js"
+            # Show masked version
+            grep "const API_KEY = " script.js | head -1 | sed 's/at_.*/at_**********/'
+          else
+            echo "❌ FAILED: Real key not found after injection!"
+            echo "Current first line:"
+            head -1 script.js
+            exit 1
+          fi
 
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
