@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy IP Address Tracker
 
 on:
   push:
@@ -6,31 +6,72 @@ on:
   pull_request:
     branches: [master]
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+
+      - name: Inject API Key into script.js
+        run: |
+          echo "=== Current directory ==="
+          pwd
+          echo "=== Listing files ==="
+          ls -la
+
+          echo "=== Checking script.js ==="
+          if [ -f "script.js" ]; then
+            echo "✓ Found script.js in root directory"
+            
+            # Check if placeholder exists
+            if grep -q "'{{IPIFY_API_KEY}}'" script.js; then
+              echo "✓ Placeholder found, injecting API key..."
+              sed -i "s/'{{IPIFY_API_KEY}}'/'${{ secrets.IPIFY_API_KEY }}'/" script.js
+              echo "✅ API key injected successfully!"
+            else
+              echo "⚠️ Warning: Placeholder '{{IPIFY_API_KEY}}' not found in script.js"
+              echo "First 5 lines of script.js:"
+              head -5 script.js
+            fi
+          else
+            echo "❌ ERROR: script.js not found in root directory!"
+            echo "Looking for JavaScript files..."
+            find . -name "*.js" -type f | head -10
+            exit 1
+          fi
+
+      - name: Build with Jekyll (for GitHub Pages compatibility)
+        run: |
+          # Create a basic Jekyll config to bypass Jekyll processing
+          echo "Created .nojekyll to disable Jekyll processing"
+          touch .nojekyll
+
+          # Create a basic index.html if it doesn't exist (but yours does)
+          if [ ! -f "index.html" ]; then
+            echo "<h1>IP Address Tracker</h1><p>Built with GitHub Actions</p>" > index.html
+          fi
+
+          echo "=== Final file list ==="
+          ls -la
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
         with:
-          node-version: '18'
-
-      - name: Inject API Key
-        run: |
-          # Replace placeholder with real API key
-          sed -i "s/'{{IPIFY_API_KEY}}'/'${{ secrets.IPIFY_API_KEY }}'/" src/script.js
-
-      - name: Prepare for Deployment
-        run: |
-          # Copy all files to root (GitHub Pages needs them in root)
-          cp -r src/* .
+          path: .
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
+        id: deployment
+        uses: actions/deploy-pages@v2
