@@ -1,7 +1,7 @@
 'use strict';
 
 //dom elements
-const API_KEY = '{{IPIFY_API_KEY}}';
+const API_KEY = 'at_80uQgCkKAotkZOGru85gCDbqaffrU';
 const searchInput = document.getElementById('searchInput');
 const searchBtn = document.querySelector('.search-button');
 const notification = document.querySelector('.notification');
