@@ -38,7 +38,3 @@ npm-debug.log*
 *.pem
 .DS_Store
 Thumbs.db
-
-README.md
-README-template.md
-style-guide.md
