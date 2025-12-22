@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Character encoding and viewport settings for responsive design -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>IP Address Tracker</title>
+
+    <!-- Main stylesheet with custom styles -->
     <link rel="stylesheet" href="styles.css" />
+
+    <!-- Leaflet CSS for map styling -->
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
       integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
       crossorigin=""
     />
+
+    <!-- Leaflet JavaScript library for interactive maps -->
     <script
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
@@ -18,13 +25,15 @@
     ></script>
   </head>
   <body>
+    <!-- Main container for the entire application -->
     <div class="container">
-      <!-- Header Section -->
+      <!-- Header Section: Title and Search Bar -->
       <header class="header">
         <h1 class="title">IP Address Tracker</h1>
 
-        <!-- Search Form -->
+        <!-- Search Form for IP addresses or domains -->
         <form class="search-form" id="searchForm">
+          <!-- Input field accepts IP addresses or domains -->
           <input
             type="text"
             class="search-input"
@@ -32,6 +41,7 @@
             placeholder="Search for any IP address or domain"
             aria-label="Search for IP address or domain"
           />
+          <!-- Search button with SVG arrow icon -->
           <button type="button" class="search-button" aria-label="Search">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -39,6 +49,7 @@
               height="14"
               viewBox="0 0 11 14"
             >
+              <!-- Arrow icon pointing right -->
               <path
                 fill="none"
                 stroke="#FFF"
@@ -50,49 +61,60 @@
         </form>
       </header>
 
-      <!-- Results Card -->
+      <!-- Results Card: Displays IP, Location, Timezone, and ISP information -->
       <div class="results-card">
+        <!-- IP Address result item -->
         <div class="result-item">
           <div class="result-label">IP Address</div>
           <div class="result-value" id="ipAddress">-----</div>
         </div>
 
+        <!-- Visual divider between result items -->
         <div class="divider"></div>
 
+        <!-- Location result item (City, Country) -->
         <div class="result-item">
           <div class="result-label">Location</div>
           <div class="result-value" id="location">-----</div>
         </div>
 
+        <!-- Visual divider between result items -->
         <div class="divider"></div>
 
+        <!-- Timezone result item -->
         <div class="result-item">
           <div class="result-label">Timezone</div>
           <div class="result-value" id="timezone">-----</div>
         </div>
 
+        <!-- Visual divider between result items -->
         <div class="divider"></div>
 
+        <!-- ISP (Internet Service Provider) result item -->
         <div class="result-item">
           <div class="result-label" id="isp-label">ISP</div>
           <div class="result-value" id="isp">-----</div>
         </div>
       </div>
 
-      <!-- Map Container -->
+      <!-- Map Container: Leaflet map will render here -->
       <div class="map-container" id="map">
-        <!-- Your JavaScript map integration will go here -->
+        <!-- Leaflet map is injected by JavaScript -->
       </div>
     </div>
 
+    <!-- Notification Toast: Displays error messages and user feedback -->
     <div class="notification hidden"></div>
 
+    <!-- Footer Attribution: Links to Frontend Mentor and developer -->
     <div class="attribution">
       Challenge by
       <a href="https://www.frontendmentor.io?ref=challenge" target="_blank"
         >Frontend Mentor</a
       >. Coded by <a href="#">Your Name Here</a>.
     </div>
+
+    <!-- Main application script -->
     <script src="script.js"></script>
   </body>
 </html>

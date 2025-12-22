@@ -1,10 +1,14 @@
-/* Reset and Base Styles */
+/* ========================================
+   RESET AND BASE STYLES
+   ======================================== */
+/* Reset default margins and padding on all elements */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Body styles: Rubik font stack with fallbacks, full viewport height, hide horizontal overflow */
 body {
   font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
     'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
@@ -12,24 +16,31 @@ body {
   overflow-x: hidden;
 }
 
-/* Container */
+/* ========================================
+   MAIN CONTAINER
+   ======================================== */
+/* Full-width container with relative positioning for absolutely positioned children */
 .container {
   position: relative;
   width: 100%;
   min-height: 100vh;
 }
 
-/* Header Section */
+/* ========================================
+   HEADER SECTION
+   ======================================== */
+/* Header with background pattern image, centered text, and z-index positioning */
 .header {
   background-image: url(images/pattern-bg-desktop.png);
   background-repeat: no-repeat;
   background-size: cover;
-  padding: 26px 24px 180px;
+  padding: 26px 24px 180px; /* Extra bottom padding to accommodate absolutely positioned results card */
   text-align: center;
   position: relative;
   z-index: 1;
 }
 
+/* Main title: white, medium weight, with tight letter spacing */
 .title {
   color: #ffffff;
   font-size: 26px;
@@ -38,16 +49,20 @@ body {
   letter-spacing: -0.25px;
 }
 
-/* Search Form */
+/* ========================================
+   SEARCH FORM
+   ======================================== */
+/* Flexbox search container with shadow and rounded corners */
 .search-form {
   display: flex;
   max-width: 555px;
-  margin: 0 auto;
+  margin: 0 auto; /* Center the form */
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   border-radius: 15px;
-  overflow: hidden;
+  overflow: hidden; /* Hide input/button overflow for rounded corners */
 }
 
+/* Input field takes remaining space, styled dark text on light background */
 .search-input {
   flex: 1;
   padding: 18px 24px;
@@ -58,15 +73,18 @@ body {
   outline: none;
 }
 
+/* Placeholder text in gray */
 .search-input::placeholder {
   color: #969696;
   font-size: 18px;
 }
 
+/* Remove default focus outline from input */
 .search-input:focus {
   outline: none;
 }
 
+/* Black button with flex centering, smooth color transition on hover/active */
 .search-button {
   background-color: #000000;
   border: none;
@@ -75,27 +93,33 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease; /* Smooth color transition */
 }
 
+/* Darker gray on hover */
 .search-button:hover {
   background-color: #3f3f3f;
 }
 
+/* Even darker on click */
 .search-button:active {
   background-color: #1a1a1a;
 }
 
+/* Ensure SVG icon is displayed as block */
 .search-button svg {
   display: block;
 }
 
-/* Results Card */
+/* ========================================
+   RESULTS CARD
+   ======================================== */
+/* Positioned absolutely over map, centered horizontally with high z-index */
 .results-card {
   position: absolute;
   top: 200px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%); /* Center horizontally */
   background: #ffffff;
   border-radius: 15px;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
@@ -103,15 +127,17 @@ body {
   display: flex;
   gap: 0;
   max-width: 1110px;
-  width: calc(100% - 48px);
-  z-index: 1000;
+  width: calc(100% - 48px); /* Account for horizontal padding */
+  z-index: 1000; /* Above map layer */
 }
 
+/* Each result item grows equally to fill available space */
 .result-item {
   flex: 1;
-  padding: 0 24px;
+  padding: 0 24px; /* Spacing between items */
 }
 
+/* Remove padding on edges to align cleanly */
 .result-item:first-child {
   padding-left: 0;
 }
@@ -120,6 +146,7 @@ body {
   padding-right: 0;
 }
 
+/* Small uppercase label in gray */
 .result-label {
   font-size: 10px;
   font-weight: 700;
@@ -129,33 +156,41 @@ body {
   margin-bottom: 12px;
 }
 
+/* Large, dark value text with word wrapping for long values */
 .result-value {
   font-size: 26px;
   font-weight: 500;
   color: #2b2b2b;
   line-height: 1.2;
-  word-break: break-word;
+  word-break: break-word; /* Break long IP addresses or domains */
 }
 
+/* Vertical divider between items (hidden on mobile) */
 .divider {
   width: 1px;
   background-color: #e0e0e0;
-  align-self: stretch;
+  align-self: stretch; /* Full height of card */
   margin: 0;
 }
 
-/* Map Container */
+/* ========================================
+   MAP CONTAINER
+   ======================================== */
+/* Full-width, full-height map container below the results card */
 .map-container {
   position: absolute;
-  top: 280px;
+  top: 280px; /* Positioned below results card */
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #e5e3df;
-  z-index: 0;
+  background-color: #e5e3df; /* Light tan fallback color while map loads */
+  z-index: 0; /* Behind results card */
 }
 
-/* Responsive Design - Tablet */
+/* ========================================
+   RESPONSIVE DESIGN - TABLET
+   Max-width: 1024px
+   ======================================== */
 @media (max-width: 1024px) {
   .header {
     padding: 24px 20px 160px;
@@ -190,7 +225,10 @@ body {
   }
 }
 
-/* Responsive Design - Mobile */
+/* ========================================
+   RESPONSIVE DESIGN - MOBILE
+   Max-width: 768px
+   ======================================== */
 @media (max-width: 768px) {
   .header {
     padding: 24px 24px 200px;
@@ -258,7 +296,10 @@ body {
   }
 }
 
-/* Small Mobile */
+/* ========================================
+   RESPONSIVE DESIGN - SMALL MOBILE
+   Max-width: 375px
+   ======================================== */
 @media (max-width: 375px) {
   .header {
     padding: 20px 20px 180px;
@@ -291,6 +332,11 @@ body {
     top: 480px;
   }
 }
+
+/* ========================================
+   ATTRIBUTION
+   ======================================== */
+/* Small footer text with links to Frontend Mentor */
 .attribution {
   font-size: 11px;
   text-align: center;
@@ -299,17 +345,23 @@ body {
   color: hsl(228, 45%, 44%);
 }
 
-/* utility classes */
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+/* Hide element completely with !important to override other styles */
 .hidden {
   display: none !important;
 }
 
-/* notification styling */
+/* ========================================
+   NOTIFICATION STYLING
+   ======================================== */
+/* Notification toast positioned at bottom-right, appears on errors/messages */
 .notification {
   width: 300px;
   height: max-content;
-  background: #2b2b2b;
-  color: whitesmoke;
+  background: #2b2b2b; /* Dark background */
+  color: whitesmoke; /* Light text */
   text-align: center;
   padding: 20px;
   position: absolute;
@@ -318,7 +370,11 @@ body {
   border-radius: 8px;
 }
 
-#map{
-  height: 100%;
-  width: 100%;
+/* ========================================
+   MAP ELEMENT
+   ======================================== */
+/* Leaflet map element fills the map container */
+#map {
+  height: 100%; /* Fill container height */
+  width: 100%; /* Fill container width */
 }
