@@ -73,7 +73,6 @@ body {
   transition: background-color 0.3s ease;
 }
 
-
 .search-button:hover {
   background-color: #3f3f3f;
 }
@@ -81,7 +80,6 @@ body {
 .search-button:active {
   background-color: #1a1a1a;
 }
-
 
 .search-button svg {
   display: block;
@@ -105,7 +103,7 @@ body {
 
 .result-item {
   flex: 1;
-  padding: 0 24px; 
+  padding: 0 24px;
 }
 
 .result-item:first-child {
@@ -255,7 +253,16 @@ body {
   }
 
   .map-container {
-    top: 520px;
+    top: 345px;
+  }
+  #map {
+    height: 100% !important;
+    width: 100% !important;
+  }
+  .attribution {
+    position: relative;
+    top: calc(100vh / 1.04);
+    background: white;
   }
 }
 
@@ -265,6 +272,10 @@ body {
 @media (max-width: 375px) {
   .header {
     padding: 20px 20px 180px;
+  }
+  #map {
+    height: 100% !important;
+    width: 100% !important;
   }
 
   .title {
@@ -291,7 +302,12 @@ body {
   }
 
   .map-container {
-    top: 480px;
+    top: 305px;
+  }
+  .attribution {
+    position: relative;
+    top: calc(100vh / 1.04);
+    background: white;
   }
 }
 
@@ -310,7 +326,7 @@ body {
 .notification {
   width: 300px;
   height: max-content;
-  background: #2b2b2b; 
+  background: #2b2b2b;
   color: whitesmoke;
   text-align: center;
   padding: 20px;
