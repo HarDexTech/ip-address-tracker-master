@@ -1,6 +1,5 @@
 'use strict';
 
-
 // API KEY AND DOM ELEMENTS
 
 // IPify Geolocation API key for fetching IP address data
@@ -21,7 +20,6 @@ let latitude; // Latitude of searched IP location
 let longitude; // Longitude of searched IP location
 let map = null; // Leaflet map instance
 
-
 // NOTIFICATION FUNCTION
 function notificationFunc(msg) {
   // Set notification text content
@@ -33,6 +31,19 @@ function notificationFunc(msg) {
     notification.classList.add('hidden');
   }, 2000);
 }
+
+//get visitor ip on load
+window.onload = function () {
+  fetch('https://api.ipify.org?format=json')
+    .then((response) => response.json())
+    .then((data) => {
+      searchInput.value = data.ip;
+      searchBtnFunc();
+    })
+    .catch((error) => {
+      console.error('Error fetching visitor IP:', error);
+    });
+};
 
 //  Handles search button click - fetches IP geolocation data and updates map
 function searchBtnFunc() {
