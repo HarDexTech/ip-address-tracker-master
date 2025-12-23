@@ -1,8 +1,8 @@
 'use strict';
 
-// ========================================
+
 // API KEY AND DOM ELEMENTS
-// ========================================
+
 // IPify Geolocation API key for fetching IP address data
 const API_KEY = 'at_80uQgCkKAotkZOGru85gCDbqaffrU';
 
@@ -15,21 +15,14 @@ const locationContent = document.getElementById('location');
 const timeZoneContent = document.getElementById('timezone');
 const ispContent = document.getElementById('isp');
 
-// ========================================
-// STATE VARIABLES
-// ========================================
+//VARIABLES
 let result; // Stores API response data
 let latitude; // Latitude of searched IP location
 let longitude; // Longitude of searched IP location
 let map = null; // Leaflet map instance
 
-// ========================================
+
 // NOTIFICATION FUNCTION
-// ========================================
-/**
- * Displays a temporary notification message to the user
- * @param {string} msg - The message to display
- */
 function notificationFunc(msg) {
   // Set notification text content
   notification.textContent = msg;
@@ -41,12 +34,7 @@ function notificationFunc(msg) {
   }, 2000);
 }
 
-// ========================================
-// SEARCH BUTTON CLICK HANDLER
-// ========================================
-/**
- * Handles search button click - fetches IP geolocation data and updates map
- */
+//  Handles search button click - fetches IP geolocation data and updates map
 function searchBtnFunc() {
   // Check if search input is empty
   if (searchInput.value.trim() === '') {
@@ -84,17 +72,9 @@ function searchBtnFunc() {
       console.error('Error:', error);
     });
 }
-
-// Attach click event listener to search button
 searchBtn.addEventListener('click', searchBtnFunc);
 
-// ========================================
-// MAP MANAGEMENT FUNCTION
-// ========================================
-/**
- * Creates a new Leaflet map or updates existing map with new coordinates
- * Displays OpenStreetMap tiles and adds a marker at the searched location
- */
+//  Creates a new Leaflet map or updates existing map with new coordinates
 function createOrUpdateMap() {
   // Remove existing map instance if one is already displayed
   if (map) {
