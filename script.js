@@ -13,6 +13,7 @@ const ipAddressContent = document.getElementById('ipAddress');
 const locationContent = document.getElementById('location');
 const timeZoneContent = document.getElementById('timezone');
 const ispContent = document.getElementById('isp');
+const loader = document.querySelector('.loader');
 
 //VARIABLES
 let result; // Stores API response data
@@ -53,6 +54,10 @@ function searchBtnFunc() {
     return;
   }
 
+
+  // Show loader while fetching data
+  loader.classList.remove('hidden');
+
   // Fetch geolocation data from IPify API
   fetch(
     `https://geo.ipify.org/api/v2/country,city?apiKey=${API_KEY}&ipAddress=${searchInput.value}`
@@ -76,6 +81,9 @@ function searchBtnFunc() {
 
       // Create or update the map with new coordinates
       createOrUpdateMap();
+
+      // Hide loader after data is fetched and processed
+      loader.classList.add('hidden');
     })
     .catch((error) => {
       // Display error notification if API call fails
@@ -106,3 +114,8 @@ function createOrUpdateMap() {
   // Add a marker pin at the searched coordinates
   var marker = L.marker([latitude, longitude]).addTo(map);
 }
+document.querySelector('form').addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') {
+    e.preventDefault(); // Prevents the default action (form submission)
+  }
+});
